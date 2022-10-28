@@ -1,18 +1,32 @@
 from django.db import models
 
 
-class Category(models.Model):
+class IngredientCategory(models.Model):
     """
     Model to describe categories of ingredients
     """
 
-    category_name = models.CharField(max_length=255, blank=True, unique=True)
+    ingredient_category_name = models.CharField(max_length=255, blank=True, unique=True)
 
     class Meta:
-        verbose_name_plural = "categories"
+        verbose_name_plural = "Ingredient categories"
 
     def __str__(self):
-        return self.name
+        return self.ingredient_category_name
+
+
+class MeasurementCategory(models.Model):
+    """
+        Model to describe category of measurements of ingredients
+
+    """
+    measurement_category_name = models.CharField(max_length=255, blank=True, unique=True)
+
+    class Meta:
+        verbose_name_plural = "Measurement categories"
+
+    def __str__(self):
+        return self.measurement_category_name
 
 
 class Measurement(models.Model):
@@ -22,6 +36,7 @@ class Measurement(models.Model):
 
     symbol = models.CharField(max_length=10)
     measurement_name = models.CharField(max_length=255)
+    category = models.ForeignKey(MeasurementCategory, on_delete=models.RESTRICT)
 
     def __str__(self):
         return self.symbol
@@ -33,7 +48,7 @@ class Ingredient(models.Model):
     """
 
     ingredient_name = models.CharField(max_length=255)
-    category = models.ForeignKey(Category, on_delete=models.RESTRICT)
+    category = models.ForeignKey(IngredientCategory, on_delete=models.RESTRICT)
     measurement = models.ForeignKey(Measurement, on_delete=models.RESTRICT)
     quantity = models.FloatField(blank=False)
     extra_notes = models.CharField(max_length=500, blank=True)
